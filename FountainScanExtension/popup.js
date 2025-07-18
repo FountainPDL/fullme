@@ -756,10 +756,14 @@ const FountainScan = {
   reportSite() {
     const urlInput = document.getElementById('reportUrl');
     const reasonInput = document.getElementById('reportReason');
-    
+    if (!urlInput || !reasonInput) {
+      this.showMessage('Report form elements not found', 'error');
+      return;
+    }
+
     const url = urlInput.value.trim();
     const reason = reasonInput.value.trim();
-    
+
     if (!url) {
       this.showMessage('Please enter a URL to report', 'error');
       return;
@@ -772,14 +776,14 @@ const FountainScan = {
       this.showMessage('Please enter a valid URL', 'error');
       return;
     }
-    
+
     // In a real extension, this would send to a backend service
     console.log('Report submitted:', { url, reason, timestamp: new Date().toISOString() });
-    
+
     // Clear form
     urlInput.value = '';
     reasonInput.value = '';
-    
+
     this.showMessage('Report submitted successfully! Thank you for helping keep users safe.', 'success');
   },
 
