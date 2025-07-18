@@ -528,4 +528,24 @@
     }
   });
 
+  // Example function to report from content script
+  function reportSuspiciousSite(url, reason) {
+    fetch('https://mlzusrxqbaphwkwcdxta.supabase.co/functions/v1/report', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url, reason })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          alert('Site reported successfully!');
+        } else {
+          alert('Failed to report site: ' + (data.error || 'Unknown error'));
+        }
+      })
+      .catch(err => {
+        alert('Error reporting site: ' + err.message);
+      });
+  }
+
 })();

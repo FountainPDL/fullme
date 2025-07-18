@@ -777,14 +777,28 @@ const FountainScan = {
       return;
     }
 
-    // In a real extension, this would send to a backend service
-    console.log('Report submitted:', { url, reason, timestamp: new Date().toISOString() });
-
-    // Clear form
-    urlInput.value = '';
-    reasonInput.value = '';
-
-    this.showMessage('Report submitted successfully! Thank you for helping keep users safe.', 'success');
+    // Send report to backend API
+    fetch('https://mlzusrxqbaphwkwcdxta.supabase.co/functions/v1/report', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ url, reason })
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          this.showMessage('Report submitted successfully! Thank you for helping keep users safe.', 'success');
+          urlInput.value = '';
+          reasonInput.value = '';
+        } else {
+          this.showMessage('Failed to submit report: ' + (data.error || 'Unknown error'), 'error');
+        }
+      })
+      .catch(error => {
+        console.error('Error submitting report:', error);
+        this.showMessage('Error submitting report', 'error');
+      });
   },
 
   // Save settings from form

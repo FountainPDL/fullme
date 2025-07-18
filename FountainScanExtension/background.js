@@ -587,17 +587,28 @@ class FountainScanBackground {
   }
 
   async handleSiteReport(reportData) {
-    // In production, this would send to a backend service
-    console.log('Site report received:', reportData);
-    
-    // Store locally for now
+    // Send to backend API
+    try {
+      await fetch('https://mlzusrxqbaphwkwcdxta.supabase.co/functions/v1/report', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          url: reportData.url,
+          reason: reportData.reason || 'Reported via extension',
+        })
+      });
+      console.log('Site report sent to backend:', reportData);
+    } catch (err) {
+      console.error('Failed to send report to backend:', err);
+    }
+
+    // Store locally as well (optional)
     const reports = await this.getStoredReports();
     reports.push({
       ...reportData,
       timestamp: new Date().toISOString(),
       id: crypto.randomUUID()
     });
-    
     await chrome.storage.local.set({ reports });
   }
 
