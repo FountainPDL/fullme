@@ -778,7 +778,7 @@ const FountainScan = {
     }
 
     // Send report to backend API
-    fetch('https://mlzusrxqbaphwkwcdxta.supabase.co/functions/v1/report', {
+    fetch('http://localhost:4000/api/report', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
